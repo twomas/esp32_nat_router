@@ -226,6 +226,44 @@ esp_err_t del_portmap(u8_t proto, u16_t mport) {
     return ESP_OK;
 }
 
+void set_ap_default_prt() {
+    ESP_ERROR_CHECK(esp_wifi_set_protocol(ESP_IF_WIFI_AP, WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N));
+}
+
+void set_ap_b_prt() {
+    ESP_ERROR_CHECK(esp_wifi_set_protocol(ESP_IF_WIFI_AP, WIFI_PROTOCOL_11B));
+}
+
+void set_ap_lr_prt() {
+    ESP_ERROR_CHECK(esp_wifi_set_protocol(ESP_IF_WIFI_AP, WIFI_PROTOCOL_LR));
+}
+
+void print_prt() {
+    uint8_t protocol_bitmap;
+    ESP_LOGI(TAG, "print_prt");
+    esp_err_t err = esp_wifi_get_protocol(ESP_IF_WIFI_AP, &protocol_bitmap);
+    if (err == ESP_OK) {
+        ESP_LOGI(TAG,"Ap protocol: %d", protocol_bitmap);
+    }
+    err = esp_wifi_get_protocol(ESP_IF_WIFI_STA, &protocol_bitmap);
+    if (err == ESP_OK) {
+        ESP_LOGI(TAG,"Sta protocol: %d", protocol_bitmap);
+    }
+}
+
+void print_bw() {
+    wifi_bandwidth_t bw;
+    ESP_LOGI(TAG, "print_bw");
+    esp_err_t err = esp_wifi_get_bandwidth(ESP_IF_WIFI_AP, &bw);
+    if (err == ESP_OK) {
+        ESP_LOGI(TAG,"Ap bandwith: %d", bw);
+    }
+    err = esp_wifi_get_bandwidth(ESP_IF_WIFI_STA, &bw);
+    if (err == ESP_OK) {
+        ESP_LOGI(TAG,"Sta bandwith: %d", bw);
+    }
+}
+
 static void initialize_console(void)
 {
     /* Drain stdout before reconfiguring it */
@@ -249,7 +287,7 @@ static void initialize_console(void)
             .parity = UART_PARITY_DISABLE,
             .stop_bits = UART_STOP_BITS_1,
             //.source_clk = UART_SCLK_REF_TICK,
-			.source_clk = UART_SCLK_XTAL,
+            .source_clk = UART_SCLK_XTAL,
     };
     /* Install UART driver for interrupt-driven reads and writes */
     ESP_ERROR_CHECK( uart_driver_install(CONFIG_ESP_CONSOLE_UART_NUM,
@@ -408,7 +446,7 @@ void wifi_init(const char* ssid, const char* passwd, const char* static_ip, cons
     if (strlen(ap_passwd) < 8) {
         ap_config.ap.authmode = WIFI_AUTH_OPEN;
     } else {
-	    strlcpy((char*)ap_config.sta.password, ap_passwd, sizeof(ap_config.sta.password));
+        strlcpy((char*)ap_config.sta.password, ap_passwd, sizeof(ap_config.sta.password));
     }
 
     if (strlen(ssid) > 0) {

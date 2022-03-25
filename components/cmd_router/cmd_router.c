@@ -43,6 +43,11 @@ static void register_set_ap(void);
 static void register_set_ap_ip(void);
 static void register_show(void);
 static void register_portmap(void);
+static void register_set_ap_default_protocol(void);
+static void register_set_ap_b_protocol(void);
+static void register_set_ap_lr_protocol(void);
+static void register_print_protocol(void);
+static void register_print_bandwidth(void);
 
 void preprocess_string(char* str)
 {
@@ -146,6 +151,11 @@ void register_router(void)
     register_set_ap_ip();
     register_portmap();
     register_show();
+    register_set_ap_default_protocol();
+    register_set_ap_b_protocol();
+    register_set_ap_lr_protocol();
+    register_print_protocol();
+    register_print_bandwidth();
 }
 
 /** Arguments used by 'set_sta' function */
@@ -510,3 +520,97 @@ static void register_show(void)
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
 }
 
+/* 'set_ap_default_protocol' command */
+static int set_ap_default_protocol(int argc, char **argv)
+{
+    set_ap_default_prt();
+
+    return 0;
+}
+
+static void register_set_ap_default_protocol(void)
+{
+    const esp_console_cmd_t cmd = {
+        .command = "set_ap_default",
+        .help = "Set ap default protocol",
+        .hint = NULL,
+        .func = &set_ap_default_protocol,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+}
+
+/* 'set_ap_b_protocol' command */
+static int set_ap_b_protocol(int argc, char **argv)
+{
+    set_ap_b_prt();
+
+    return 0;
+}
+
+static void register_set_ap_b_protocol(void)
+{
+    const esp_console_cmd_t cmd = {
+        .command = "set_ap_b",
+        .help = "Set ap b protocol",
+        .hint = NULL,
+        .func = &set_ap_b_protocol,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+}
+
+/* 'set_ap_lr_protocol' command */
+static int set_ap_lr_protocol(int argc, char **argv)
+{
+    set_ap_lr_prt();
+
+    return 0;
+}
+
+static void register_set_ap_lr_protocol(void)
+{
+    const esp_console_cmd_t cmd = {
+        .command = "set_ap_lr",
+        .help = "Set ap lr protocol",
+        .hint = NULL,
+        .func = &set_ap_lr_protocol,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+}
+
+/* 'print_protocol' command */
+static int print_protocol(int argc, char **argv)
+{
+    print_prt();
+
+    return 0;
+}
+
+static void register_print_protocol(void)
+{
+    const esp_console_cmd_t cmd = {
+        .command = "print_protocol",
+        .help = "Print protocol",
+        .hint = NULL,
+        .func = &print_protocol,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+}
+
+/* 'print_bandwidth' command */
+static int print_bandwidth(int argc, char **argv)
+{
+    print_bw();
+
+    return 0;
+}
+
+static void register_print_bandwidth(void)
+{
+    const esp_console_cmd_t cmd = {
+        .command = "print_bandwidth",
+        .help = "Print bandwidth",
+        .hint = NULL,
+        .func = &print_bandwidth,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+}
